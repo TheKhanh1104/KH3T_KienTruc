@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven3'
+        jdk 'JDK21'
+        nodejs 'NodeJS20'
+    }
+
     environment {
         DOCKER_REGISTRY = 'your-registry.com'
         APP_NAME = 'kh3t-shop'
