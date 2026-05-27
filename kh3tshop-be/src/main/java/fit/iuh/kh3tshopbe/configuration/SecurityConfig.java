@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,7 +31,7 @@ import java.util.List;
 public class SecurityConfig {
 
     @Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, fit.iuh.kh3tshopbe.filter.RateLimitingFilter rateLimitingFilter) throws Exception {
     http
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -64,7 +65,8 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                             .jwtAuthenticationConverter(jwtAuthenticationConverter())
                     )
                     .authenticationEntryPoint(new AuthenticationEntryPoint())
-            );
+                )
+                .addFilterAfter(rateLimitingFilter, BearerTokenAuthenticationFilter.class);
 
     return http.build();
 }
